@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-php-deployment
+  name: nextcloud-php
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: nginx-php
+      app: nextcloud
   template:
     metadata:
       labels:
-        app: nginx-php
+        app: nextcloud
     spec:
       containers:
       - name: nginx
@@ -18,20 +18,20 @@ spec:
         ports:
         - containerPort: 80
         volumeMounts:
-        - name: web-root
+        - name: nextcloud-data
           mountPath: /var/www/html
-        - name: nginx-conf
+        - name: nginx-config
           mountPath: /etc/nginx/conf.d
       - name: php
-        image: php:8.1-fpm
+        image: nextcloud:fpm
         volumeMounts:
-        - name: web-root
+        - name: nextcloud-data
           mountPath: /var/www/html
       volumes:
-      - name: web-root
+      - name: nextcloud-data
         hostPath:
           path: /mnt/nextcloud
           type: Directory
-      - name: nginx-conf
+      - name: nginx-config
         configMap:
           name: nginx-config
